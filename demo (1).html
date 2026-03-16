@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optima AI — Optimize, Outperform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#22c55e;--green-l:#4ade80;--green-d:#16a34a;--green-bg:#f0fdf4;
+  --green-glow:rgba(34,197,94,.2);--black:#0a0a0a;--dark:#1a1a1a;
+  --g9:#262626;--g8:#333;--g7:#4a4a4a;--g6:#666;--g5:#888;--g4:#a3a3a3;
+  --g3:#c7c7c7;--g2:#e5e5e5;--g1:#f2f2f2;--g0:#f8f8f8;--white:#fff;
+  --r-sm:12px;--r-md:16px;--r-lg:24px;--r-xl:32px;--r-2xl:40px;--r-full:9999px;
+  --ease:cubic-bezier(.22,1,.36,1);--ease2:cubic-bezier(.16,1,.3,1);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,sans-serif;background:#e8e8e8;color:var(--dark);overflow-x:hidden}
+
+/* ========== PAGE WRAPPER ========== */
+.page{
+  background:var(--white);
+  border-radius:var(--r-2xl);
+  overflow:hidden;
+  position:relative;
+  margin:0;
+}
+@media(min-width:768px){
+  .page{margin:10px;box-shadow:0 0 80px rgba(0,0,0,.08)}
+}
+
+/* ========== SCATTER SYSTEM ========== */
+.scatter-item{
+  opacity:0;
+  transform:translate(var(--sx,0),var(--sy,0)) rotate(var(--sr,0deg)) scale(var(--ss,.6));
+  transition:opacity .9s var(--ease),transform 1s var(--ease);
+  transition-delay:var(--delay,0s);
+}
+.scatter-item.assembled{
+  opacity:1;
+  transform:translate(0,0) rotate(0deg) scale(1);
+}
+
+/* Shatter pieces */
+.shatter-piece{
+  opacity:0;
+  transform:translate(var(--sx,0),var(--sy,0)) rotate(var(--sr,0deg)) scale(.3);
+  filter:blur(var(--sb,6px));
+  transition:all 1.1s var(--ease2);
+  transition-delay:var(--delay,0s);
+}
+.shatter-piece.assembled{
+  opacity:1;
+  transform:translate(0,0) rotate(0deg) scale(1);
+  filter:blur(0);
+}
+
+/* ========== NAV ========== */
+.nav{
+  position:sticky;top:0;z-index:100;
+  padding:16px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(0,0,0,.04);
+  transition:all .35s ease;
+}
+.nav.scrolled{padding:10px 48px;box-shadow:0 4px 30px rgba(0,0,0,.04)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black)}
+.logo-mark{width:36px;height:36px;background:var(--black);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;position:relative}
+.logo-mark::after{content:'';width:14px;height:14px;background:var(--green);border-radius:50%}
+.logo-name{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--g6);font-size:14px;font-weight:500;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--green);border-radius:2px;transition:width .3s var(--ease)}
+.nav-links a:hover{color:var(--black)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .35s var(--ease);text-decoration:none;white-space:nowrap;position:relative;overflow:hidden}
+.btn-ghost{padding:10px 20px;background:0;color:var(--g7);border-radius:var(--r-full)}
+.btn-ghost:hover{color:var(--black);background:var(--g0)}
+.btn-dark{padding:12px 26px;background:var(--black);color:var(--white);border-radius:var(--r-full);box-shadow:0 2px 12px rgba(0,0,0,.12)}
+.btn-dark:hover{background:var(--g8);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.btn-green{padding:14px 32px;background:var(--green);color:#fff;border-radius:var(--r-full);box-shadow:0 4px 20px var(--green-glow);font-size:15px}
+.btn-green:hover{background:var(--green-d);transform:translateY(-2px);box-shadow:0 8px 32px rgba(34,197,94,.35)}
+.btn-outline{padding:14px 32px;background:var(--white);color:var(--dark);border:1.5px solid var(--g2);border-radius:var(--r-full);font-size:15px}
+.btn-outline:hover{border-color:var(--g4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.btn-arrow{display:inline-flex;transition:transform .3s var(--ease)}
+.btn-green:hover .btn-arrow{transform:translateX(3px)}
+.mob-tog{display:none;flex-direction:column;gap:5px;background:0;border:0;cursor:pointer;padding:4px}
+.mob-tog span{width:22px;height:2px;background:var(--dark);border-radius:2px;transition:all .3s}
+
+/* ========== HERO ========== */
+.hero{
+  position:relative;padding:100px 48px 80px;
+  background:var(--g0);overflow:hidden;min-height:100vh;
+  display:flex;align-items:center;
+  border-radius:0 0 var(--r-2xl) var(--r-2xl);
+}
+.hero-dot-grid{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,var(--g3) .8px,transparent .8px);
+  background-size:32px 32px;opacity:.25;pointer-events:none;
+}
+.hero-inner{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  align-items:center;max-width:1360px;margin:0 auto;width:100%;
+}
+.hero-left{max-width:600px}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 8px 6px 12px;background:var(--white);
+  border:1px solid var(--g2);border-radius:var(--r-full);
+  font-size:13px;font-weight:500;color:var(--g7);
+  box-shadow:0 1px 4px rgba(0,0,0,.03);
+}
+.badge-dot{width:8px;height:8px;background:var(--green);border-radius:50%;position:relative}
+.badge-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--green);opacity:0;animation:ping 2s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.4);opacity:0}}
+.badge-tag{padding:4px 12px;background:var(--green-bg);color:var(--green-d);border-radius:var(--r-full);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.hero-title{
+  font-size:clamp(40px,5.8vw,80px);font-weight:800;
+  line-height:1.02;letter-spacing:-3px;color:var(--black);
+  margin:28px 0 24px;
+}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line-in{display:block}
+.hero-title .green-text{color:var(--green)}
+.hero-desc{font-size:17px;line-height:1.75;color:var(--g6);max-width:480px;margin-bottom:40px}
+.hero-cta{display:flex;align-items:center;gap:14px;margin-bottom:48px}
+.social-proof{display:flex;align-items:center;gap:14px}
+.av-stack{display:flex}
+.av{width:38px;height:38px;border-radius:50%;border:3px solid var(--white);margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;transition:transform .3s var(--ease);cursor:pointer;position:relative;z-index:1}
+.av:first-child{margin-left:0}
+.av:hover{transform:translateY(-4px) scale(1.15);z-index:10}
+.av-1{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.av-2{background:linear-gradient(135deg,#f97316,#fb923c)}
+.av-3{background:linear-gradient(135deg,#22c55e,#4ade80)}
+.av-4{background:linear-gradient(135deg,#ef4444,#f87171)}
+.av-5{background:linear-gradient(135deg,#0ea5e9,#38bdf8)}
+.proof-txt{font-size:13px;color:var(--g5);line-height:1.4}
+.proof-txt strong{color:var(--dark);font-weight:700}
+
+/* Hero Right - 3D Scene */
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-height:500px}
+.hero-3d-scene{position:relative;width:100%;height:500px;perspective:1200px}
+
+/* 3D Cube */
+.cube-wrap{
+  position:absolute;width:160px;height:160px;
+  top:50%;left:50%;
+  transform-style:preserve-3d;
+  animation:cubeFloat 8s ease-in-out infinite;
+}
+@keyframes cubeFloat{
+  0%,100%{transform:translate(-50%,-50%) rotateX(-20deg) rotateY(30deg)}
+  25%{transform:translate(-50%,-55%) rotateX(-15deg) rotateY(120deg)}
+  50%{transform:translate(-50%,-45%) rotateX(-25deg) rotateY(210deg)}
+  75%{transform:translate(-50%,-52%) rotateX(-18deg) rotateY(300deg)}
+}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d}
+.cube-face{
+  position:absolute;width:160px;height:160px;
+  border-radius:var(--r-lg);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:36px;
+  backface-visibility:visible;
+  border:1px solid rgba(255,255,255,.15);
+}
+.face-front{background:rgba(34,197,94,.12);backdrop-filter:blur(10px);color:var(--green);transform:translateZ(80px)}
+.face-back{background:rgba(99,102,241,.12);backdrop-filter:blur(10px);color:#6366f1;transform:rotateY(180deg) translateZ(80px)}
+.face-right{background:rgba(249,115,22,.12);backdrop-filter:blur(10px);color:#f97316;transform:rotateY(90deg) translateZ(80px)}
+.face-left{background:rgba(236,72,153,.12);backdrop-filter:blur(10px);color:#ec4899;transform:rotateY(-90deg) translateZ(80px)}
+.face-top{background:rgba(14,165,233,.12);backdrop-filter:blur(10px);color:#0ea5e9;transform:rotateX(90deg) translateZ(80px)}
+.face-bottom{background:rgba(234,179,8,.12);backdrop-filter:blur(10px);color:#eab308;transform:rotateX(-90deg) translateZ(80px)}
+
+/* Floating 3D Elements */
+.float-3d{position:absolute;will-change:transform}
+.geo-shape{border-radius:var(--r-lg);backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,.04)}
+
+.geo-1{
+  width:80px;height:80px;top:5%;left:10%;
+  background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.02));
+  border-radius:50%;animation:float1 6s ease-in-out infinite;
+}
+.geo-2{
+  width:60px;height:60px;top:15%;right:5%;
+  background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(99,102,241,.02));
+  border-radius:var(--r-md);animation:float2 7s ease-in-out infinite;
+  transform:rotate(45deg);
+}
+.geo-3{
+  width:100px;height:100px;bottom:10%;left:5%;
+  background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(249,115,22,.02));
+  border-radius:var(--r-lg);animation:float3 8s ease-in-out infinite;
+}
+.geo-4{
+  width:40px;height:40px;bottom:30%;right:10%;
+  background:var(--green);opacity:.12;
+  border-radius:50%;animation:float1 5s ease-in-out infinite reverse;
+}
+.geo-5{
+  width:120px;height:1px;top:40%;left:0;
+  background:linear-gradient(90deg,transparent,var(--g3),transparent);
+  animation:float2 9s ease-in-out infinite;
+}
+.geo-6{
+  width:1px;height:120px;top:20%;right:30%;
+  background:linear-gradient(to bottom,transparent,var(--g3),transparent);
+  animation:float3 7s ease-in-out infinite;
+}
+
+@keyframes float1{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(5deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-15px) rotate(50deg)}}
+@keyframes float3{0%,100%{transform:translateY(0)}50%{transform:translateY(-25px)}}
+
+/* Floating Stat Cards */
+.hero-float-card{
+  position:absolute;background:var(--white);
+  border-radius:var(--r-lg);padding:16px 20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.03);
+  z-index:5;
+}
+.hf-1{top:3%;right:5%}
+.hf-2{bottom:8%;left:0}
+.hf-3{top:60%;right:0}
+.hfc-label{font-size:11px;color:var(--g4);font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.hfc-val{font-size:22px;font-weight:800;color:var(--black);letter-spacing:-.5px}
+.hfc-val .gn{color:var(--green)}
+.hfc-bars{display:flex;align-items:flex-end;gap:3px;height:28px;margin-top:8px}
+.hfc-bar{width:6px;border-radius:3px;transition:height .6s var(--ease)}
+.hfc-bar.g{background:var(--green);opacity:.7}
+.hfc-bar.gr{background:var(--g2)}
+
+/* ========== LOGOS SECTION ========== */
+.logos-section{padding:56px 48px;text-align:center;overflow:hidden}
+.logos-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(--g4);margin-bottom:28px}
+.logos-track{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+.logo-item{
+  font-size:20px;font-weight:800;color:var(--g3);letter-spacing:-.5px;
+  transition:color .3s;cursor:default;display:flex;align-items:center;gap:8px;
+}
+.logo-item:hover{color:var(--g6)}
+
+/* ========== FEATURES ========== */
+.features{padding:100px 48px;position:relative;overflow:hidden}
+.section-header{text-align:center;max-width:700px;margin:0 auto 64px}
+.section-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);
+  margin-bottom:16px;
+}
+.section-badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%}
+.section-title{
+  font-size:clamp(30px,4vw,52px);font-weight:800;
+  letter-spacing:-2px;color:var(--black);line-height:1.1;margin-bottom:16px;
+}
+.section-desc{font-size:16px;color:var(--g5);line-height:1.7;max-width:560px;margin:0 auto}
+
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1360px;margin:0 auto;
+}
+.feature-card{
+  background:var(--g0);border:1px solid var(--g1);
+  border-radius:var(--r-xl);padding:36px 28px;
+  transition:all .4s var(--ease);position:relative;overflow:hidden;
+}
+.feature-card:hover{
+  background:var(--white);border-color:var(--g2);
+  box-shadow:0 20px 60px rgba(0,0,0,.06);transform:translateY(-6px);
+}
+.feature-card:hover .fc-3d{transform:rotateY(15deg) rotateX(-10deg) scale(1.05)}
+
+/* 3D icon boxes */
+.fc-3d-wrap{perspective:400px;margin-bottom:20px;width:64px;height:64px}
+.fc-3d{
+  width:64px;height:64px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  transform-style:preserve-3d;transition:transform .6s var(--ease);
+  position:relative;
+}
+.fc-3d::after{
+  content:'';position:absolute;inset:0;
+  border-radius:var(--r-md);
+  background:inherit;opacity:.3;
+  transform:translateZ(-12px) scale(.9);
+}
+.fc-3d.green-3d{background:linear-gradient(135deg,var(--green-bg),rgba(34,197,94,.15))}
+.fc-3d.blue-3d{background:linear-gradient(135deg,#eff6ff,rgba(59,130,246,.12))}
+.fc-3d.orange-3d{background:linear-gradient(135deg,#fff7ed,rgba(249,115,22,.12))}
+.fc-3d.purple-3d{background:linear-gradient(135deg,#faf5ff,rgba(168,85,247,.12))}
+.fc-3d.pink-3d{background:linear-gradient(135deg,#fdf2f8,rgba(236,72,153,.12))}
+.fc-3d.teal-3d{background:linear-gradient(135deg,#f0fdfa,rgba(20,184,166,.12))}
+
+.fc-title{font-size:18px;font-weight:700;color:var(--black);margin-bottom:8px;letter-spacing:-.3px}
+.fc-desc{font-size:14px;color:var(--g5);line-height:1.6}
+
+/* Big feature card */
+.feature-card.big{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;padding:48px 40px}
+.feature-card.big .big-left{max-width:360px}
+.feature-card.big .big-left .fc-title{font-size:26px;letter-spacing:-1px}
+
+/* 3D Dashboard in big card */
+.mini-dash-3d{
+  perspective:800px;
+}
+.mini-dash{
+  background:var(--dark);border-radius:var(--r-lg);padding:20px;
+  transform:rotateY(-8deg) rotateX(4deg);
+  transform-style:preserve-3d;transition:transform .6s var(--ease);
+  box-shadow:0 30px 60px rgba(0,0,0,.15);
+}
+.feature-card.big:hover .mini-dash{transform:rotateY(0) rotateX(0)}
+.md-topbar{display:flex;gap:5px;margin-bottom:14px}
+.md-dot{width:8px;height:8px;border-radius:50%}
+.md-dot.r{background:#ff5f57}.md-dot.y{background:#ffbd2e}.md-dot.g{background:#28ca41}
+.md-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.md-card{
+  background:rgba(255,255,255,.05);border-radius:var(--r-sm);padding:14px;
+  border:1px solid rgba(255,255,255,.06);
+}
+.md-card-t{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.md-card-v{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.md-card-c{font-size:10px;font-weight:600;color:var(--green);margin-top:2px;display:flex;align-items:center;gap:3px}
+.md-bars{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:8px}
+.md-bar{flex:1;border-radius:2px;background:var(--green);opacity:.5;min-height:3px}
+
+/* ========== PRODUCT SECTION ========== */
+.product-section{
+  padding:100px 48px;background:var(--g0);
+  border-radius:var(--r-2xl);position:relative;overflow:hidden;
+}
+.product-inner{max-width:1360px;margin:0 auto}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.product-left{max-width:500px}
+.product-feat-list{display:flex;flex-direction:column;gap:16px;margin-top:32px}
+.pf-item{
+  display:flex;gap:14px;padding:16px 18px;border-radius:var(--r-lg);
+  transition:all .3s var(--ease);cursor:default;
+}
+.pf-item:hover{background:var(--white);box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.pf-icon{
+  width:44px;height:44px;border-radius:var(--r-md);
+  background:var(--green-bg);border:1px solid rgba(34,197,94,.1);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .3s var(--ease);
+}
+.pf-item:hover .pf-icon{background:var(--green);border-color:var(--green)}
+.pf-item:hover .pf-icon svg{stroke:#fff}
+.pf-h{font-size:15px;font-weight:700;color:var(--black);margin-bottom:2px}
+.pf-p{font-size:13px;color:var(--g5);line-height:1.5}
+
+/* 3D Laptop */
+.product-right{perspective:1000px}
+.laptop-3d{
+  transform:rotateY(-12deg) rotateX(5deg);
+  transform-style:preserve-3d;transition:transform .8s var(--ease);
+}
+.product-right:hover .laptop-3d{transform:rotateY(-4deg) rotateX(2deg)}
+.lt-screen{
+  background:var(--dark);border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.2);position:relative;
+}
+.lt-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:0 4px}
+.lt-d{width:8px;height:8px;border-radius:50%}
+.lt-d.r{background:#ff5f57}.lt-d.y{background:#ffbd2e}.lt-d.g{background:#28ca41}
+.lt-url-bar{flex:1;height:22px;background:rgba(255,255,255,.06);border-radius:var(--r-full);margin-left:10px;display:flex;align-items:center;padding:0 10px;font-size:10px;color:rgba(255,255,255,.25)}
+.lt-content{
+  background:#111118;border-radius:var(--r-sm);padding:16px;
+  min-height:240px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.lt-card{
+  background:rgba(255,255,255,.04);border-radius:var(--r-md);padding:14px;
+  border:1px solid rgba(255,255,255,.05);transition:all .3s;
+}
+.lt-card:hover{border-color:rgba(34,197,94,.15);background:rgba(255,255,255,.06)}
+.lt-card-t{font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:6px}
+.lt-card-v{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.lt-card-sub{font-size:10px;font-weight:600;margin-top:2px;display:flex;align-items:center;gap:3px}
+.lt-card-sub.up{color:var(--green)}.lt-card-sub.dn{color:#ef4444}
+.lt-card-chart{display:flex;align-items:flex-end;gap:3px;height:36px;margin-top:10px}
+.lt-bar-i{flex:1;border-radius:2px;min-height:3px}
+.lt-bar-i.g{background:var(--green);opacity:.6}.lt-bar-i.gr{background:rgba(255,255,255,.06)}
+.lt-base{
+  width:106%;margin-left:-3%;height:14px;
+  background:linear-gradient(to bottom,#c4c4c8,#b0b0b4);
+  border-radius:0 0 10px 10px;position:relative;
+}
+.lt-base::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:4px;background:#a8a8ac;border-radius:0 0 4px 4px}
+
+/* 3D Floating panels */
+.floating-panel{
+  position:absolute;background:var(--white);border-radius:var(--r-lg);
+  padding:14px 18px;box-shadow:0 12px 40px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.03);
+  z-index:10;
+}
+.fp-1{top:-20px;right:-10px}
+.fp-2{bottom:30px;left:-20px}
+.fp-label{font-size:10px;color:var(--g4);font-weight:500;margin-bottom:2px}
+.fp-val{font-size:18px;font-weight:800;color:var(--black);letter-spacing:-.3px}
+.fp-val .gn{color:var(--green)}
+.fp-mini-bars{display:flex;gap:2px;align-items:flex-end;height:20px;margin-top:6px}
+.fp-bar{width:5px;border-radius:2px}
+.fp-bar.g{background:var(--green);opacity:.6}.fp-bar.gr{background:var(--g2)}
+
+/* ========== HOW IT WORKS ========== */
+.how-section{padding:100px 48px;position:relative;overflow:hidden}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1360px;margin:0 auto;position:relative}
+.steps-grid::before{
+  content:'';position:absolute;top:70px;left:15%;right:15%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--g2),var(--g2),transparent);z-index:0;
+}
+.step-card{
+  background:var(--white);border:1px solid var(--g1);border-radius:var(--r-xl);
+  padding:36px 28px;text-align:center;position:relative;z-index:1;
+  transition:all .4s var(--ease);
+}
+.step-card:hover{box-shadow:0 20px 60px rgba(0,0,0,.06);transform:translateY(-8px);border-color:var(--g2)}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--g0);border:2px solid var(--g2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;color:var(--dark);
+  margin:0 auto 20px;transition:all .3s var(--ease);
+}
+.step-card:hover .step-num{background:var(--green);border-color:var(--green);color:#fff}
+
+/* 3D Step Icons */
+.step-3d-wrap{perspective:300px;margin:0 auto 16px;width:80px;height:80px}
+.step-3d{
+  width:80px;height:80px;border-radius:var(--r-lg);
+  display:flex;align-items:center;justify-content:center;
+  transform-style:preserve-3d;
+  animation:stepFloat 5s ease-in-out infinite;
+  background:linear-gradient(135deg,var(--green-bg),rgba(34,197,94,.08));
+  border:1px solid rgba(34,197,94,.1);
+}
+.step-card:nth-child(2) .step-3d{animation-delay:-1.5s;background:linear-gradient(135deg,#eff6ff,rgba(59,130,246,.08));border-color:rgba(59,130,246,.1)}
+.step-card:nth-child(3) .step-3d{animation-delay:-3s;background:linear-gradient(135deg,#faf5ff,rgba(168,85,247,.08));border-color:rgba(168,85,247,.1)}
+@keyframes stepFloat{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-8px) rotateY(12deg)}}
+.step-title{font-size:18px;font-weight:700;color:var(--black);margin-bottom:8px;letter-spacing:-.3px}
+.step-desc{font-size:14px;color:var(--g5);line-height:1.6}
+
+/* ========== STATS ========== */
+.stats-section{padding:80px 48px;background:var(--black);border-radius:var(--r-2xl);position:relative;overflow:hidden;margin:0 0}
+.stats-section::before{content:'';position:absolute;top:-40%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,.12),transparent 70%);pointer-events:none}
+.stats-section::after{content:'';position:absolute;bottom:-30%;left:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(99,102,241,.08),transparent 70%);pointer-events:none}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  max-width:1360px;margin:0 auto;position:relative;z-index:2;
+}
+.stat-block{text-align:center;padding:40px 20px;position:relative}
+.stat-block::after{
+  content:'';position:absolute;right:0;top:20%;height:60%;width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.08),transparent);
+}
+.stat-block:last-child::after{display:none}
+.stat-num{
+  font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--white);
+  letter-spacing:-2px;line-height:1;margin-bottom:8px;
+}
+.stat-num .gn{color:var(--green)}
+.stat-label{font-size:14px;color:var(--g5);font-weight:500}
+
+/* 3D rotating ring behind stats */
+.stats-3d-ring{
+  position:absolute;top:50%;left:50%;
+  width:300px;height:300px;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.03);border-radius:50%;
+  animation:ringRotate 20s linear infinite;
+  z-index:1;
+}
+.stats-3d-ring::before{
+  content:'';position:absolute;top:-4px;left:50%;
+  width:8px;height:8px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 20px var(--green-glow);
+}
+@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* ========== TESTIMONIALS ========== */
+.testimonials{padding:100px 48px;position:relative;overflow:hidden}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1360px;margin:0 auto}
+.testi-card{
+  background:var(--g0);border:1px solid var(--g1);border-radius:var(--r-xl);
+  padding:32px 28px;transition:all .4s var(--ease);position:relative;
+}
+.testi-card:hover{background:var(--white);box-shadow:0 20px 60px rgba(0,0,0,.05);transform:translateY(-6px);border-color:var(--g2)}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px}
+.testi-star{color:var(--green);font-size:14px}
+.testi-text{font-size:15px;color:var(--g7);line-height:1.7;margin-bottom:20px;font-weight:400}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
+.testi-name{font-size:14px;font-weight:700;color:var(--black)}
+.testi-role{font-size:12px;color:var(--g4)}
+
+/* ========== PRICING ========== */
+.pricing{padding:100px 48px;background:var(--g0);border-radius:var(--r-2xl);position:relative;overflow:hidden}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto}
+.price-card{
+  background:var(--white);border:1px solid var(--g2);border-radius:var(--r-xl);
+  padding:36px 28px;transition:all .4s var(--ease);position:relative;
+}
+.price-card:hover{box-shadow:0 20px 60px rgba(0,0,0,.06);transform:translateY(-8px)}
+.price-card.popular{border-color:var(--green);box-shadow:0 0 0 1px var(--green),0 20px 60px rgba(34,197,94,.1)}
+.price-card.popular:hover{box-shadow:0 0 0 1px var(--green),0 30px 80px rgba(34,197,94,.15);transform:translateY(-10px)}
+.popular-tag{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#fff;font-size:11px;font-weight:700;
+  padding:4px 16px;border-radius:var(--r-full);letter-spacing:.5px;text-transform:uppercase;
+}
+.price-name{font-size:16px;font-weight:700;color:var(--black);margin-bottom:4px}
+.price-desc{font-size:13px;color:var(--g5);margin-bottom:20px}
+.price-amount{font-size:42px;font-weight:900;color:var(--black);letter-spacing:-2px;margin-bottom:4px;line-height:1}
+.price-amount span{font-size:16px;font-weight:500;color:var(--g4);letter-spacing:0}
+.price-period{font-size:13px;color:var(--g4);margin-bottom:24px}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.price-feat{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--g7)}
+.price-check{width:18px;height:18px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.price-btn{
+  width:100%;padding:14px;border:none;border-radius:var(--r-full);
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+  transition:all .35s var(--ease);
+}
+.price-btn.dark{background:var(--black);color:#fff}
+.price-btn.dark:hover{background:var(--g8)}
+.price-btn.green{background:var(--green);color:#fff;box-shadow:0 4px 20px var(--green-glow)}
+.price-btn.green:hover{background:var(--green-d);box-shadow:0 8px 32px rgba(34,197,94,.3)}
+.price-btn.outline{background:var(--white);color:var(--dark);border:1.5px solid var(--g2)}
+.price-btn.outline:hover{border-color:var(--g4)}
+
+/* ========== CTA ========== */
+.cta-section{padding:60px 48px 60px}
+.cta-card{
+  max-width:1360px;margin:0 auto;background:var(--black);
+  border-radius:var(--r-xl);padding:80px 60px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-card::before{content:'';position:absolute;top:-40%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,.12),transparent 70%);pointer-events:none}
+.cta-title{font-size:clamp(30px,4vw,52px);font-weight:800;color:#fff;letter-spacing:-2px;line-height:1.1;margin-bottom:16px;position:relative;z-index:2}
+.cta-desc{font-size:16px;color:var(--g5);max-width:480px;margin:0 auto 32px;line-height:1.7;position:relative;z-index:2}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:14px;position:relative;z-index:2}
+.btn-wh{padding:16px 36px;background:#fff;color:var(--black);border:none;border-radius:var(--r-full);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .35s var(--ease);display:inline-flex;align-items:center;gap:8px}
+.btn-wh:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,255,255,.15)}
+.btn-gh-w{padding:16px 36px;background:0;color:var(--g4);border:1.5px solid var(--g8);border-radius:var(--r-full);font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .35s var(--ease)}
+.btn-gh-w:hover{border-color:var(--g5);color:#fff;transform:translateY(-2px)}
+
+/* 3D elements in CTA */
+.cta-3d-cube{
+  position:absolute;bottom:20px;left:40px;
+  width:60px;height:60px;transform-style:preserve-3d;
+  animation:ctaCube 10s linear infinite;opacity:.15;z-index:1;
+}
+@keyframes ctaCube{from{transform:rotateX(0) rotateY(0)}to{transform:rotateX(360deg) rotateY(360deg)}}
+.cta-cube-face{position:absolute;width:60px;height:60px;border:1px solid rgba(255,255,255,.3);border-radius:8px}
+.ccf-fr{transform:translateZ(30px)}.ccf-bk{transform:rotateY(180deg) translateZ(30px)}
+.ccf-ri{transform:rotateY(90deg) translateZ(30px)}.ccf-le{transform:rotateY(-90deg) translateZ(30px)}
+.ccf-to{transform:rotateX(90deg) translateZ(30px)}.ccf-bo{transform:rotateX(-90deg) translateZ(30px)}
+
+/* ========== FOOTER ========== */
+.footer{
+  padding:48px 48px 32px;display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--g1);
+}
+.foot-left{display:flex;align-items:center;gap:8px}
+.foot-logo{width:28px;height:28px;background:var(--black);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.foot-logo::after{content:'';width:10px;height:10px;background:var(--green);border-radius:50%}
+.foot-copy{font-size:13px;color:var(--g4)}
+.foot-links{display:flex;gap:24px}
+.foot-links a{font-size:13px;color:var(--g4);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--dark)}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;gap:40px}
+  .hero-left{max-width:100%;display:flex;flex-direction:column;align-items:center}
+  .hero-desc{margin-left:auto;margin-right:auto}
+  .hero-cta{justify-content:center}
+  .social-proof{justify-content:center}
+  .hero-right{max-width:440px;margin:0 auto}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .feature-card.big{grid-column:span 2}
+  .product-grid{grid-template-columns:1fr;gap:40px}
+  .steps-grid{grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-block:nth-child(2)::after{display:none}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .testi-card:last-child{display:none}
+  .pricing-grid{grid-template-columns:1fr 1fr 1fr}
+  .nav{padding:14px 24px}.nav.scrolled{padding:10px 24px}
+  .hero,.features,.how-section,.testimonials,.logos-section,.stats-section,.pricing,.cta-section{padding-left:24px;padding-right:24px}
+  .cta-card,.product-inner{padding-left:24px;padding-right:24px}
+}
+@media(max-width:768px){
+  .nav-links,.btn-ghost{display:none}
+  .mob-tog{display:flex}
+  .hero{padding:50px 20px 40px;min-height:auto}
+  .hero-cta{flex-direction:column;width:100%}
+  .btn-green,.btn-outline{width:100%;justify-content:center}
+  .features-grid{grid-template-columns:1fr}
+  .feature-card.big{grid-column:span 1;grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr;gap:16px}
+  .steps-grid::before{display:none}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat-block::after{display:none}
+  .testi-grid{grid-template-columns:1fr}
+  .testi-card:last-child{display:block}
+  .pricing-grid{grid-template-columns:1fr}
+  .cta-card{padding:48px 20px}
+  .cta-btns{flex-direction:column}
+  .btn-wh,.btn-gh-w{width:100%;justify-content:center;text-align:center}
+  .footer{flex-direction:column;gap:14px;padding:32px 20px 24px}
+  .foot-links{flex-wrap:wrap;justify-content:center;gap:16px}
+  .hero-float-card{display:none}
+  .floating-panel{display:none}
+  .cube-wrap{width:120px;height:120px}
+  .cube-face{width:120px;height:120px}
+  .face-front{transform:translateZ(60px)}.face-back{transform:rotateY(180deg) translateZ(60px)}
+  .face-right{transform:rotateY(90deg) translateZ(60px)}.face-left{transform:rotateY(-90deg) translateZ(60px)}
+  .face-top{transform:rotateX(90deg) translateZ(60px)}.face-bottom{transform:rotateX(-90deg) translateZ(60px)}
+  .hero,.features,.how-section,.testimonials,.logos-section,.stats-section,.pricing,.cta-section{padding-left:16px;padding-right:16px}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .hero-3d-scene{height:350px}
+  .geo-shape{display:none}
+}
+
+/* Mobile Menu */
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;transition:opacity .3s}
+.mob-menu.open{display:flex;opacity:1}
+.mob-menu a{font-size:22px;font-weight:700;color:var(--dark);text-decoration:none;letter-spacing:-.5px}
+.mob-close{position:absolute;top:18px;right:20px;background:0;border:0;font-size:28px;cursor:pointer;color:var(--dark);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.mob-close:hover{background:var(--g1)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo"><div class="logo-mark"></div><span class="logo-name">Optima</span></a>
+  <ul class="nav-links"><li><a href="#">Features</a></li><li><a href="#">Product</a></li><li><a href="#">Pricing</a></li><li><a href="#">Resources</a></li><li><a href="#">Enterprise</a></li></ul>
+  <div class="nav-right">
+    <a href="#" class="btn btn-ghost">Sign In</a>
+    <a href="#" class="btn btn-dark">Get Started</a>
+    <button class="mob-tog" id="mobTog" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" id="mobClose">&times;</button>
+  <a href="#">Features</a><a href="#">Product</a><a href="#">Pricing</a><a href="#">Resources</a>
+  <a href="#" class="btn btn-dark" style="margin-top:12px">Get Started</a>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero">
+  <div class="hero-dot-grid"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="badge scatter-item"><span class="badge-dot"></span>Introducing Optima AI v3.0<span class="badge-tag">New</span></div>
+      <h1 class="hero-title">
+        <span class="line"><span class="line-in shatter-piece">Optimize,</span></span>
+        <span class="line"><span class="line-in shatter-piece"><span class="green-text">Outperform</span>,</span></span>
+        <span class="line"><span class="line-in shatter-piece">Outgrow.</span></span>
+      </h1>
+      <p class="hero-desc scatter-item">Leverage the power of AI to automate workflows, analyze performance, and scale your business — all from one beautifully designed dashboard.</p>
+      <div class="hero-cta scatter-item">
+        <a href="#" class="btn btn-green">View Demo<svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 10h10M11 6l4 4-4 4"/></svg></a>
+        <a href="#" class="btn btn-outline">Demo Dashboard</a>
+      </div>
+      <div class="social-proof scatter-item">
+        <div class="av-stack">
+          <div class="av av-1">S</div><div class="av av-2">A</div><div class="av av-3">M</div><div class="av av-4">K</div><div class="av av-5">+</div>
+        </div>
+        <div class="proof-txt"><strong>2,400+</strong> teams already<br>optimizing with Optima</div>
+      </div>
+    </div>
+
+    <div class="hero-right scatter-item" id="heroRight">
+      <div class="hero-3d-scene" id="hero3d">
+        <!-- 3D Cube -->
+        <div class="cube-wrap" id="cubeWrap">
+          <div class="cube">
+            <div class="cube-face face-front"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <div class="cube-face face-back"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+            <div class="cube-face face-right"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="cube-face face-left"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="cube-face face-top"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="cube-face face-bottom"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Geometric Shapes -->
+        <div class="float-3d geo-shape geo-1 scatter-item"></div>
+        <div class="float-3d geo-shape geo-2 scatter-item"></div>
+        <div class="float-3d geo-shape geo-3 scatter-item"></div>
+        <div class="float-3d geo-shape geo-4 scatter-item"></div>
+        <div class="float-3d geo-5 scatter-item"></div>
+        <div class="float-3d geo-6 scatter-item"></div>
+
+        <!-- Float Cards -->
+        <div class="hero-float-card hf-1 scatter-item">
+          <div class="hfc-label"><svg width="10" height="10" viewBox="0 0 10 10" fill="#22c55e"><polygon points="5,0 10,8 0,8"/></svg>Growth</div>
+          <div class="hfc-val"><span class="gn">40</span>%</div>
+          <div class="hfc-bars">
+            <div class="hfc-bar gr" style="height:35%"></div><div class="hfc-bar gr" style="height:50%"></div>
+            <div class="hfc-bar g" style="height:65%"></div><div class="hfc-bar g" style="height:80%"></div>
+            <div class="hfc-bar g" style="height:95%"></div><div class="hfc-bar g" style="height:100%"></div>
+          </div>
+        </div>
+        <div class="hero-float-card hf-2 scatter-item">
+          <div class="hfc-label">Uptime</div>
+          <div class="hfc-val">99.9<span style="font-size:14px;color:var(--g4)">%</span></div>
+        </div>
+        <div class="hero-float-card hf-3 scatter-item">
+          <div class="hfc-label">Response</div>
+          <div class="hfc-val" style="font-size:18px">~12<span style="font-size:11px;color:var(--g4)"> ms</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LOGOS ========== -->
+<section class="logos-section">
+  <div class="logos-label scatter-item">Trusted by innovative teams worldwide</div>
+  <div class="logos-track">
+    <div class="logo-item scatter-item">Stripe</div>
+    <div class="logo-item scatter-item">Vercel</div>
+    <div class="logo-item scatter-item">Linear</div>
+    <div class="logo-item scatter-item">Notion</div>
+    <div class="logo-item scatter-item">Figma</div>
+    <div class="logo-item scatter-item">Loom</div>
+    <div class="logo-item scatter-item">Raycast</div>
+  </div>
+</section>
+
+<!-- ========== FEATURES ========== -->
+<section class="features" id="features">
+  <div class="section-header">
+    <div class="section-badge scatter-item"><span class="section-badge-dot"></span>Features</div>
+    <h2 class="section-title shatter-piece">Everything you need,<br>nothing you don't</h2>
+    <p class="section-desc scatter-item">Powerful tools designed for modern teams. Every feature is crafted to help you move faster.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card scatter-item">
+      <div class="fc-3d-wrap"><div class="fc-3d green-3d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div></div>
+      <div class="fc-title">AI Analytics</div>
+      <div class="fc-desc">Real-time insights powered by machine learning that adapts to your unique data patterns automatically.</div>
+    </div>
+    <div class="feature-card scatter-item">
+      <div class="fc-3d-wrap"><div class="fc-3d blue-3d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div></div>
+      <div class="fc-title">Custom Dashboards</div>
+      <div class="fc-desc">Build stunning, data-rich dashboards with our intuitive drag-and-drop builder in minutes.</div>
+    </div>
+    <div class="feature-card scatter-item">
+      <div class="fc-3d-wrap"><div class="fc-3d orange-3d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+      <div class="fc-title">Enterprise Security</div>
+      <div class="fc-desc">Bank-level encryption, SSO, SOC2, and GDPR compliance out of the box for every plan.</div>
+    </div>
+
+    <!-- BIG CARD -->
+    <div class="feature-card big scatter-item">
+      <div class="big-left">
+        <div class="fc-3d-wrap"><div class="fc-3d purple-3d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
+        <div class="fc-title">Real-time Performance Monitoring</div>
+        <div class="fc-desc">Track every metric that matters with live updating charts and intelligent anomaly detection alerts.</div>
+      </div>
+      <div class="mini-dash-3d">
+        <div class="mini-dash">
+          <div class="md-topbar"><div class="md-dot r"></div><div class="md-dot y"></div><div class="md-dot g"></div></div>
+          <div class="md-grid">
+            <div class="md-card">
+              <div class="md-card-t">Revenue</div>
+              <div class="md-card-v">$84.2K</div>
+              <div class="md-card-c"><svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"/></svg>+18.2%</div>
+              <div class="md-bars"><div class="md-bar" style="height:30%"></div><div class="md-bar" style="height:50%"></div><div class="md-bar" style="height:40%"></div><div class="md-bar" style="height:70%"></div><div class="md-bar" style="height:90%"></div><div class="md-bar" style="height:75%"></div><div class="md-bar" style="height:100%"></div></div>
+            </div>
+            <div class="md-card">
+              <div class="md-card-t">Users</div>
+              <div class="md-card-v">14,821</div>
+              <div class="md-card-c"><svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"/></svg>+32.1%</div>
+              <div class="md-bars"><div class="md-bar" style="height:25%"></div><div class="md-bar" style="height:45%"></div><div class="md-bar" style="height:55%"></div><div class="md-bar" style="height:65%"></div><div class="md-bar" style="height:80%"></div><div class="md-bar" style="height:70%"></div><div class="md-bar" style="height:100%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card scatter-item">
+      <div class="fc-3d-wrap"><div class="fc-3d teal-3d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
+      <div class="fc-title">Instant Sync</div>
+      <div class="fc-desc">Changes reflect across all devices instantly with zero-latency real-time collaboration.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRODUCT ========== -->
+<section class="product-section" id="product">
+  <div class="product-inner">
+    <div class="section-header">
+      <div class="section-badge scatter-item"><span class="section-badge-dot"></span>Product</div>
+      <h2 class="section-title shatter-piece">Your command center<br>for growth</h2>
+      <p class="section-desc scatter-item">One dashboard to rule all your analytics, team management, and performance optimization.</p>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-left">
+        <div class="product-feat-list">
+          <div class="pf-item scatter-item">
+            <div class="pf-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <div><div class="pf-h">AI-Powered Predictions</div><div class="pf-p">Forecast trends before they happen with 97% accuracy using neural networks.</div></div>
+          </div>
+          <div class="pf-item scatter-item">
+            <div class="pf-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+            <div><div class="pf-h">Drag & Drop Builder</div><div class="pf-p">Create custom reports and dashboards without writing a single line of code.</div></div>
+          </div>
+          <div class="pf-item scatter-item">
+            <div class="pf-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div><div class="pf-h">Team Collaboration</div><div class="pf-p">Real-time editing, comments, and sharing with unlimited team members.</div></div>
+          </div>
+          <div class="pf-item scatter-item">
+            <div class="pf-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div><div class="pf-h">Smart Alerts</div><div class="pf-p">Get notified instantly when metrics cross your defined thresholds.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-right scatter-item" style="position:relative">
+        <div class="laptop-3d">
+          <div class="lt-screen">
+            <div class="lt-bar"><div class="lt-d r"></div><div class="lt-d y"></div><div class="lt-d g"></div><div class="lt-url-bar">optima.ai/dashboard</div></div>
+            <div class="lt-content">
+              <div class="lt-card">
+                <div class="lt-card-t">Revenue</div><div class="lt-card-v counter-el" data-target="84290" data-prefix="$" data-suffix="">$0</div>
+                <div class="lt-card-sub up"><svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"/></svg>+18.2%</div>
+                <div class="lt-card-chart"><div class="lt-bar-i g" style="height:35%"></div><div class="lt-bar-i g" style="height:55%"></div><div class="lt-bar-i gr" style="height:30%"></div><div class="lt-bar-i g" style="height:70%"></div><div class="lt-bar-i g" style="height:85%"></div><div class="lt-bar-i g" style="height:65%"></div><div class="lt-bar-i g" style="height:100%"></div></div>
+              </div>
+              <div class="lt-card">
+                <div class="lt-card-t">Users</div><div class="lt-card-v counter-el" data-target="14821" data-prefix="" data-suffix="">0</div>
+                <div class="lt-card-sub up"><svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 10,8 0,8"/></svg>+32.1%</div>
+                <div class="lt-card-chart"><div class="lt-bar-i gr" style="height:25%"></div><div class="lt-bar-i g" style="height:45%"></div><div class="lt-bar-i g" style="height:60%"></div><div class="lt-bar-i g" style="height:50%"></div><div class="lt-bar-i g" style="height:80%"></div><div class="lt-bar-i g" style="height:70%"></div><div class="lt-bar-i g" style="height:100%"></div></div>
+              </div>
+              <div class="lt-card">
+                <div class="lt-card-t">Bounce</div><div class="lt-card-v">2.4%</div>
+                <div class="lt-card-sub dn"><svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,10 10,2 0,2"/></svg>-8.5%</div>
+                <div class="lt-card-chart"><div class="lt-bar-i g" style="height:80%"></div><div class="lt-bar-i g" style="height:65%"></div><div class="lt-bar-i g" style="height:55%"></div><div class="lt-bar-i g" style="height:40%"></div><div class="lt-bar-i g" style="height:30%"></div><div class="lt-bar-i gr" style="height:20%"></div><div class="lt-bar-i g" style="height:12%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="lt-base"></div>
+        </div>
+        <div class="floating-panel fp-1 scatter-item"><div class="fp-label">Conversion</div><div class="fp-val"><span class="gn">12.8</span>%</div><div class="fp-mini-bars"><div class="fp-bar g" style="height:40%"></div><div class="fp-bar g" style="height:60%"></div><div class="fp-bar g" style="height:55%"></div><div class="fp-bar g" style="height:80%"></div><div class="fp-bar g" style="height:100%"></div></div></div>
+        <div class="floating-panel fp-2 scatter-item"><div class="fp-label">Active Now</div><div class="fp-val">4,821</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="how-section" id="how">
+  <div class="section-header">
+    <div class="section-badge scatter-item"><span class="section-badge-dot"></span>How it works</div>
+    <h2 class="section-title shatter-piece">Start in 3 simple steps</h2>
+    <p class="section-desc scatter-item">Get up and running in minutes — no engineering degree required.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card scatter-item">
+      <div class="step-num">1</div>
+      <div class="step-3d-wrap"><div class="step-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div></div>
+      <div class="step-title">Create Account</div>
+      <div class="step-desc">Sign up in 30 seconds. No credit card needed. Instant access to all features.</div>
+    </div>
+    <div class="step-card scatter-item">
+      <div class="step-num">2</div>
+      <div class="step-3d-wrap"><div class="step-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div></div>
+      <div class="step-title">Connect Data</div>
+      <div class="step-desc">Integrate with 200+ data sources in one click. We handle the rest automatically.</div>
+    </div>
+    <div class="step-card scatter-item">
+      <div class="step-num">3</div>
+      <div class="step-3d-wrap"><div class="step-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
+      <div class="step-title">Start Growing</div>
+      <div class="step-desc">Watch insights flow in. Make data-driven decisions. Scale without limits.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== STATS ========== -->
+<section class="stats-section" id="stats">
+  <div class="stats-3d-ring"></div>
+  <div class="stats-grid">
+    <div class="stat-block scatter-item">
+      <div class="stat-num"><span class="gn counter-s" data-target="40">0</span>%</div>
+      <div class="stat-label">Average Growth Rate</div>
+    </div>
+    <div class="stat-block scatter-item">
+      <div class="stat-num"><span class="counter-s" data-target="2400">0</span>+</div>
+      <div class="stat-label">Active Teams</div>
+    </div>
+    <div class="stat-block scatter-item">
+      <div class="stat-num"><span class="counter-s" data-target="99">0</span>.9%</div>
+      <div class="stat-label">Uptime SLA</div>
+    </div>
+    <div class="stat-block scatter-item">
+      <div class="stat-num"><span class="counter-s" data-target="12">0</span>ms</div>
+      <div class="stat-label">Avg. Response Time</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="testimonials" id="testi">
+  <div class="section-header">
+    <div class="section-badge scatter-item"><span class="section-badge-dot"></span>Testimonials</div>
+    <h2 class="section-title shatter-piece">Loved by thousands<br>of teams</h2>
+    <p class="section-desc scatter-item">Don't take our word for it. Here's what our users say.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card scatter-item">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-text">"Optima transformed how we look at data. The AI insights saved us 20+ hours per week. The dashboard is a thing of beauty."</div>
+      <div class="testi-author"><div class="testi-av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">S</div><div><div class="testi-name">Sarah Chen</div><div class="testi-role">VP Engineering, Stripe</div></div></div>
+    </div>
+    <div class="testi-card scatter-item">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-text">"The best analytics platform we've ever used. Setup took 5 minutes and the ROI was visible within the first week."</div>
+      <div class="testi-author"><div class="testi-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">A</div><div><div class="testi-name">Alex Rivera</div><div class="testi-role">Head of Growth, Vercel</div></div></div>
+    </div>
+    <div class="testi-card scatter-item">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-text">"We replaced 4 separate tools with Optima. The unified dashboard and AI predictions are genuinely game-changing."</div>
+      <div class="testi-author"><div class="testi-av" style="background:linear-gradient(135deg,#22c55e,#4ade80)">M</div><div><div class="testi-name">Maya Patel</div><div class="testi-role">CTO, Linear</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRICING ========== -->
+<section class="pricing" id="pricing">
+  <div class="section-header">
+    <div class="section-badge scatter-item"><span class="section-badge-dot"></span>Pricing</div>
+    <h2 class="section-title shatter-piece">Simple, transparent<br>pricing</h2>
+    <p class="section-desc scatter-item">No hidden fees. No surprises. Cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card scatter-item">
+      <div class="price-name">Starter</div>
+      <div class="price-desc">For individuals & small teams</div>
+      <div class="price-amount">$0<span>/mo</span></div>
+      <div class="price-period">Free forever</div>
+      <div class="price-features">
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Up to 3 dashboards</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Basic analytics</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>1 team member</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Email support</div>
+      </div>
+      <button class="price-btn outline">Get Started</button>
+    </div>
+    <div class="price-card popular scatter-item">
+      <div class="popular-tag">Most Popular</div>
+      <div class="price-name">Pro</div>
+      <div class="price-desc">For growing teams</div>
+      <div class="price-amount">$29<span>/mo</span></div>
+      <div class="price-period">Billed annually</div>
+      <div class="price-features">
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Unlimited dashboards</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>AI-powered insights</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Up to 20 members</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Priority support</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Custom integrations</div>
+      </div>
+      <button class="price-btn green">Get Started</button>
+    </div>
+    <div class="price-card scatter-item">
+      <div class="price-name">Enterprise</div>
+      <div class="price-desc">For large organizations</div>
+      <div class="price-amount">$99<span>/mo</span></div>
+      <div class="price-period">Custom billing</div>
+      <div class="price-features">
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Everything in Pro</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>SSO & SAML</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Unlimited members</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Dedicated manager</div>
+        <div class="price-feat"><div class="price-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>99.99% SLA</div>
+      </div>
+      <button class="price-btn dark">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="cta-section">
+  <div class="cta-card scatter-item">
+    <div class="cta-3d-cube"><div class="cta-cube-face ccf-fr"></div><div class="cta-cube-face ccf-bk"></div><div class="cta-cube-face ccf-ri"></div><div class="cta-cube-face ccf-le"></div><div class="cta-cube-face ccf-to"></div><div class="cta-cube-face ccf-bo"></div></div>
+    <h2 class="cta-title shatter-piece">Ready to outperform<br>your competition?</h2>
+    <p class="cta-desc scatter-item">Start your 14-day free trial. No credit card required.</p>
+    <div class="cta-btns scatter-item">
+      <button class="btn-wh">Start Free Trial<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 10h10M11 6l4 4-4 4"/></svg></button>
+      <button class="btn-gh-w">Talk to Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="foot-left"><div class="foot-logo"></div><span class="foot-copy">© 2025 Optima. All rights reserved.</span></div>
+  <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">Twitter</a></div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ====== SCATTER / SHATTER ENGINE ====== */
+function randomBetween(a,b){return Math.random()*(b-a)+a}
+
+function setScatterProps(el){
+  const sx=randomBetween(-120,120)+'px';
+  const sy=randomBetween(-80,120)+'px';
+  const sr=randomBetween(-25,25)+'deg';
+  const ss=randomBetween(.3,.7);
+  const delay=randomBetween(0,.4)+'s';
+  el.style.setProperty('--sx',sx);
+  el.style.setProperty('--sy',sy);
+  el.style.setProperty('--sr',sr);
+  el.style.setProperty('--ss',ss);
+  el.style.setProperty('--delay',delay);
+}
+
+function setShatterProps(el){
+  const sx=randomBetween(-200,200)+'px';
+  const sy=randomBetween(-150,150)+'px';
+  const sr=randomBetween(-40,40)+'deg';
+  const sb=randomBetween(2,8)+'px';
+  const delay=randomBetween(0,.35)+'s';
+  el.style.setProperty('--sx',sx);
+  el.style.setProperty('--sy',sy);
+  el.style.setProperty('--sr',sr);
+  el.style.setProperty('--sb',sb);
+  el.style.setProperty('--delay',delay);
+}
+
+// Initialize all scatter items
+document.querySelectorAll('.scatter-item').forEach(setScatterProps);
+document.querySelectorAll('.shatter-piece').forEach(setShatterProps);
+
+/* ====== INTERSECTION OBSERVER ====== */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('assembled');
+    }
+  });
+},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+
+document.querySelectorAll('.scatter-item,.shatter-piece').forEach(el=>observer.observe(el));
+
+/* ====== HERO - INSTANT ASSEMBLE ====== */
+requestAnimationFrame(()=>{
+  document.querySelectorAll('#hero .scatter-item, #hero .shatter-piece').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('assembled'),100+i*80);
+  });
+});
+
+/* ====== COUNTER ANIMATION ====== */
+function animateNum(el){
+  const target=+el.dataset.target;
+  const prefix=el.dataset.prefix||'';
+  const suffix=el.dataset.suffix||'';
+  const duration=2000;const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/duration,1);
+    const eased=1-Math.pow(1-p,4);
+    const val=Math.round(eased*target);
+    if(prefix||suffix){el.textContent=prefix+val.toLocaleString()+suffix}
+    else{el.textContent=val.toLocaleString()}
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const cObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){animateNum(e.target);cObserver.unobserve(e.target)}});
+},{threshold:.5});
+document.querySelectorAll('.counter-s,.counter-el').forEach(el=>cObserver.observe(el));
+
+/* ====== NAV SCROLL ====== */
+const nav=document.getElementById('nav');
+let ticking=false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){requestAnimationFrame(()=>{
+    nav.classList.toggle('scrolled',window.scrollY>50);
+    ticking=false;
+  });ticking=true;}
+},{passive:true});
+
+/* ====== 3D PARALLAX (Hero) ====== */
+if(window.innerWidth>768){
+  const hero=document.getElementById('hero');
+  const cube=document.getElementById('cubeWrap');
+  const cards=document.querySelectorAll('.hero-float-card');
+  const geos=document.querySelectorAll('.geo-shape');
+  let tx=0,ty=0,cx=0,cy=0;
+
+  hero.addEventListener('mousemove',e=>{
+    const r=hero.getBoundingClientRect();
+    tx=((e.clientX-r.left)/r.width-.5)*2;
+    ty=((e.clientY-r.top)/r.height-.5)*2;
+  });
+
+  function pLoop(){
+    cx+=(tx-cx)*.05;cy+=(ty-cy)*.05;
+    if(cube){
+      // We don't override cube animation, just adjust scene
+    }
+    cards.forEach((c,i)=>{
+      const s=(i+1)*12;
+      c.style.transform=`translate(${cx*-s}px,${cy*-s}px)`;
+    });
+    geos.forEach((g,i)=>{
+      const s=(i+1)*8;
+      g.style.transform=`translate(${cx*s}px,${cy*s}px)`;
+    });
+    requestAnimationFrame(pLoop);
+  }
+  pLoop();
+}
+
+/* ====== PRODUCT 3D TILT ====== */
+const prodRight=document.querySelector('.product-right');
+if(prodRight&&window.innerWidth>768){
+  const laptop=prodRight.querySelector('.laptop-3d');
+  prodRight.addEventListener('mousemove',e=>{
+    const r=prodRight.getBoundingClientRect();
+    const x=((e.clientX-r.left)/r.width-.5);
+    const y=((e.clientY-r.top)/r.height-.5);
+    laptop.style.transform=`rotateY(${-12+x*15}deg) rotateX(${5-y*10}deg)`;
+  });
+  prodRight.addEventListener('mouseleave',()=>{
+    laptop.style.transform='rotateY(-12deg) rotateX(5deg)';
+  });
+}
+
+/* ====== BAR ANIMATIONS ====== */
+const barObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const bars=e.target.querySelectorAll('[class*="bar-i"],[class*="hfc-bar"],[class*="md-bar"],[class*="fp-bar"]');
+      bars.forEach((b,i)=>{
+        const h=b.style.height;b.style.height='0';
+        setTimeout(()=>{b.style.transition='height .7s cubic-bezier(.22,1,.36,1)';b.style.height=h},i*60);
+      });
+      barObserver.unobserve(e.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.lt-card-chart,.hfc-bars,.md-bars,.fp-mini-bars').forEach(el=>barObserver.observe(el));
+
+/* ====== MOBILE MENU ====== */
+const mobTog=document.getElementById('mobTog');
+const mobMenu=document.getElementById('mobMenu');
+const mobClose=document.getElementById('mobClose');
+if(mobTog){
+  mobTog.addEventListener('click',()=>{mobMenu.classList.add('open');document.body.style.overflow='hidden'});
+  mobClose.addEventListener('click',()=>{mobMenu.classList.remove('open');document.body.style.overflow=''});
+  mobMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobMenu.classList.remove('open');document.body.style.overflow=''}));
+}
+
+/* ====== BUTTON RIPPLE ====== */
+const rs=document.createElement('style');
+rs.textContent='@keyframes rpl{to{width:300px;height:300px;opacity:0}}';
+document.head.appendChild(rs);
+
+document.querySelectorAll('.btn-green,.btn-dark,.btn-wh,.btn-outline,.price-btn').forEach(b=>{
+  b.addEventListener('click',function(e){
+    const r=this.getBoundingClientRect();
+    const s=document.createElement('span');
+    s.style.cssText=`position:absolute;left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%);pointer-events:none;animation:rpl .5s ease-out forwards`;
+    this.style.position='relative';this.style.overflow='hidden';
+    this.appendChild(s);setTimeout(()=>s.remove(),500);
+  });
+});
+
+/* ====== SMOOTH ANCHORS ====== */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    const t=this.getAttribute('href');if(t==='#'){e.preventDefault();return}
+    const el=document.querySelector(t);if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+});
+
+})();
+</script>
+</body>
+</html>
